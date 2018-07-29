@@ -10,7 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { gameListItems, otherGameListItems } from './tileData';
-import Game from './Game'
+import Game from './Game';
+import GameList from './GameList';
 
 const drawerWidth = 250;
 
@@ -44,18 +45,39 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing.unit * 3,
   },
+  hidden: {
+    display: 'none',
+  },
 });
 
 class PermanentDrawer extends React.Component {
-  state = {
-    anchor: 'left',
-  };
 
+  constructor(props){
+    super(props);
+    this.state = {
+      anchor: 'left',
+      games: Array(3).fill(null),
+      gameNumber: 0,
+    }
+  }
+
+  // 削除はしているが
   handleChange = event => {
     this.setState({
       anchor: event.target.value,
+      games: Array(3).fill(null),
+      gameNumber: 1,
     });
   };
+
+  handleClick(i) {
+    // alert("test");
+    const games = this.state.games;
+    this.setState({
+      games: games.slice(),
+      gameNumber: i,
+    });
+  }
 
   render() {
     const { classes } = this.props;
@@ -71,9 +93,9 @@ class PermanentDrawer extends React.Component {
       >
         <div className={classes.toolbar} />
         <Divider />
-        <List>{gameListItems}</List>
+        <List><GameList onClick={(i) => this.handleClick(i)} /></List>
         <Divider />
-        <List>{otherGameListItems}</List>
+        <List><GameList onClick={(i) => this.handleClick(i)} listtype="other" /></List>
       </Drawer>
     );
 
@@ -86,6 +108,12 @@ class PermanentDrawer extends React.Component {
       after = drawer;
     }
 
+    const games = this.state.games;
+    const gameNumber = this.state.gameNumber;
+    const gameElement = games.map((game, gameIndex) => {
+        return (<div key={gameIndex} className={gameNumber != gameIndex ? this.props.classes.hidden: ""}><Game /></div>);
+    });
+
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
@@ -95,14 +123,14 @@ class PermanentDrawer extends React.Component {
           >
             <Toolbar>
               <Typography variant="title" color="inherit" noWrap>
-                first game
+                Tic Tac Toe
               </Typography>
             </Toolbar>
           </AppBar>
           {before}
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <Game />
+            {gameElement}
           </main>
           {after}
         </div>
