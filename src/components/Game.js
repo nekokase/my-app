@@ -1,6 +1,25 @@
 import React, { Component } from 'react';
 import './Game.css';
 import Board from './Board'
+import Button from "@material-ui/core/Button";
+import Icon from '@material-ui/core/Icon';
+import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
+import Typography from '@material-ui/core/Typography';
+
+const styles = theme => ({
+  historybutton: {
+    marginTop: 5,
+  },
+  currentselected: {
+    marginTop: 5,
+    backgroundColor: '#3FA2B5',
+  },
+  buttonsarea: {
+    listStyle: 'none',
+    padding: 'initial',
+  },
+});
 
 class Game extends React.Component {
   constructor(props){
@@ -87,13 +106,13 @@ class Game extends React.Component {
       if (this.state.stepNumber == move) {
         return (
           <li key={move}>
-            <button className="current-selected" onClick={() => this.jumpTo(move)}>{desc}</button>
+            <Button className={this.props.classes.currentselected} onClick={() => this.jumpTo(move)} variant="raised" color="primary">{desc}</Button>
           </li>
         );
       } else {
         return (
           <li key={move}>
-            <button onClick={() => this.jumpTo(move)}>{desc}</button>
+            <Button className={this.props.classes.historybutton} onClick={() => this.jumpTo(move)} variant="raised" color="primary">{desc}</Button>
           </li>
         );
       }
@@ -105,8 +124,12 @@ class Game extends React.Component {
           <Board suqares={squares} onClicktest={(i) => this.handleClick(i)} />
         </div>
         <div className="game-info">
-          <div>{status}</div>
-          <ol>{moves}</ol>
+          <div>
+            <Typography variant="subheading" color="inherit" align="left" noWrap>
+              {status}
+            </Typography>
+          </div>
+          <ul className={this.props.classes.buttonsarea}>{moves}</ul>
         </div>
       </div>
     );
@@ -136,5 +159,4 @@ function calculateWinner(squares) {
   return null;
 }
 
-
-export default Game;
+export default withStyles(styles)(Game);
