@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './Board.css';
-import Square from './Square'
+import Square from './Square';
 
 class Board extends React.Component {
   renderSquare(i) {
